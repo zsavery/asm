@@ -1,0 +1,68 @@
+; The purpose of this lab is to program the MC8051 to add multi bythes two signed integers. The signed integers are thrre bythes long. 
+; The programwill store thr answer in thre consecutive data memory bythes at RAM address 40H. Display the the answer on P0, P1, and P2.
+; Port 3 at pin 0 -> (P3.0) will be set to 
+	ORG 	00
+	JMP 	MAIN
+	ORG 	30H
+	MAIN:
+	MOV 	P0,#0
+	MOV 	P1, #0
+	MOV 	P2, #0
+	MOV 	P3,#0
+	CLR 	00
+
+	MOV 	DPTR, #100H;
+	CLR 	A;
+	MOVC 	A,@A+DPTR
+	MOV 	B,A
+	MOV 	DPTR, #105H
+	CLR 	A
+	MOVC 	A, @A+DPTR
+	MOV 	C,00
+	ADDC 	A,B
+	MOV 	0,C
+	MOV 	40H,A
+	MOV 	P0,A
+
+	MOV 	DPTR, #101H
+	CLR 	A;
+	MOVC 	A,@A+DPTR
+	MOV 	B,A
+	MOV 	DPTR, #106H
+	CLR 	A
+	MOVC 	A, @A+DPTR
+	MOV 	C,00
+	ADDC 	A,B
+	MOV 	0,C
+	MOV 	41H,A
+	MOV  	P1, A
+	MOV     DPTR, #102H;
+	CLR 	A;
+	MOVC 	A,@A+DPTR
+	MOV 	B,A
+	MOV     DPTR, #107H
+	CLR 	A
+	MOVC 	A, @A+DPTR
+	MOV 	C,00
+	ADDC 	A,B
+	MOV 	0,C
+	MOV     42H, A
+	MOV     P2, A
+
+	JNB     OV, NOOV
+	MOV     A, #1
+	MOV     43H, A
+	MOV     P3, A
+	JMP     WAIT
+	NOOV:
+	MOV     A, #0
+	MOV     P3, A
+	WAIT:   JMP   $
+	ORG     100H
+	DB      9AH, 7FH, 89H
+	ORG     105H
+	DB      8H, 0BCH, 34H
+
+	
+
+	END
