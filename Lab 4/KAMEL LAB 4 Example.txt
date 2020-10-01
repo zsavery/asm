@@ -1,0 +1,36 @@
+     ; KHALED KAMEL, CS 343 LAB 1
+     ; THIS MC8051 PROGRAM CONFIGURES P0 AS INPUT AND P1, P2 AS OUTPUT. IT CONFIGURES T0 AS TIMER IN
+     ; MODE 1 WITH INITIAL VALUE OF 00FFH. ALSO, IT DISPLAYS WHATS IN P3.0 AT P3.7 AFTER EVERY T0 OVERFLOW.
+     ; T1 IS CONFUGERED AS COUNTER IN MODE 2 WITH INITIAL
+     ; COUNT OF FAH.  ON EVERY TO OVERFLOW, IT DISPLAYS 55H AND AAH ALTERNATEVELY. ONCE COUNTER IS OVERFLOWN,
+     ; IT DISPLAYS CONTENT OF P0 ON P2. 
+                     ORG             00
+                     JMP             MAIN
+                     ORG             30H
+                     MAIN:
+                     MOV             P1, #00; CONFIGURE P1 AND P2 AS OUTPUT
+                     MOV             P2, #00
+                     CLR             P3.7
+                     MOV             TMOD, #61H; INITIALIZE T0 AND T1
+                     MOV             TL0, #0FFH
+                     MOV             TH0, #00H
+                     MOV             TH1, #0FAH
+                     MOV             TL1, #0FAH
+                     MOV             R0, #55H
+                     SETB    TR0; START T0
+                     SETB    TR1; START T1
+                     REPEAT:
+                     JNB             TF0, $; WAIT FOR T0 TO OVERFLOW
+                     MOV             P1, R0
+                     CLR             TF0
+                     MOV             C, P3.0
+                     MOV             P3.7, C
+                     MOV             A, R0
+                     CPL             A
+                     MOV             R0, A
+                     JNB             TF1, REPEAT
+                     MOV             P2, P0
+                     ;CLR            TF1
+                     ;CLR            TR1; STOP T1
+                     JMP             REPEAT
+                     END
